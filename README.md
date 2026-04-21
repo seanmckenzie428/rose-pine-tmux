@@ -1,4 +1,4 @@
-# rose-pine-minimal-tmux
+# rose-pine-tmux
 
 A minimal tmux TPM plugin inspired by Rosé Pine.
 
@@ -12,75 +12,39 @@ The status bar itself uses a transparent background (`bg=default`), while the se
 ## Install with TPM
 
 ```tmux
-set -g @plugin 'yourname/rose-pine-minimal-tmux'
+set -g @plugin 'MunifTanjim/tmux-mode-indicator'
+set -g @plugin 'yourname/rose-pine-tmux'
 
 # Theme selection:
 #   auto  -> follow tmux client light/dark hooks (tmux 3.6+)
 #   dark  -> force dark
 #   light -> force light
-set -g @rose_pine_minimal_variant 'auto'
-
-# Optional: override the mode indicator format if your plugin uses a different token
-# set -g @rose_pine_minimal_mode_indicator_format '#{mode_indicator}'
+set -g @rose_pine_variant 'auto'
 
 run '~/.tmux/plugins/tpm/tpm'
 ```
 
+## Important
+
+This plugin assumes you are using `MunifTanjim/tmux-mode-indicator`, which exposes `#{tmux_mode_indicator}`.
+
 ## Options
 
-### Main
-
 ```tmux
-set -g @rose_pine_minimal_variant 'auto'
-set -g @rose_pine_minimal_mode_indicator_format '#{mode_indicator}'
+set -g @rose_pine_variant 'auto'
+set -g @rose_pine_reset 'false'
+set -g @rose_pine_mode_indicator_format '#{tmux_mode_indicator}'
+set -g @rose_pine_status_left_length '30'
+set -g @rose_pine_status_right_length '30'
 ```
 
-### Lengths
+### Auto switching
+
+Like Catppuccin, this plugin can use tmux's `client-dark-theme` and `client-light-theme` hooks. In `auto` mode, the plugin installs those hooks, updates the current variant, and reapplies the theme.
+
+If you switch themes manually and want a clean reapply, you can do:
 
 ```tmux
-set -g @rose_pine_minimal_status_left_length '50'
-set -g @rose_pine_minimal_status_right_length '50'
+set -g @rose_pine_reset 'true'
+run '~/.tmux/plugins/rose-pine-tmux/rose-pine-tmux.tmux'
 ```
-
-### Dark colors
-
-```tmux
-set -g @rose_pine_minimal_status_fg_dark '#e0def4'
-set -g @rose_pine_minimal_inactive_fg_dark '#908caa'
-set -g @rose_pine_minimal_session_bg_dark '#31748f'
-set -g @rose_pine_minimal_session_fg_dark '#1f1d2e'
-set -g @rose_pine_minimal_active_window_bg_dark '#31748f'
-set -g @rose_pine_minimal_active_window_fg_dark '#1f1d2e'
-set -g @rose_pine_minimal_mode_bg_dark '#31748f'
-set -g @rose_pine_minimal_mode_fg_dark '#1f1d2e'
-```
-
-### Light colors
-
-```tmux
-set -g @rose_pine_minimal_status_fg_light '#575279'
-set -g @rose_pine_minimal_inactive_fg_light '#797593'
-set -g @rose_pine_minimal_session_bg_light '#286983'
-set -g @rose_pine_minimal_session_fg_light '#fffaf3'
-set -g @rose_pine_minimal_active_window_bg_light '#286983'
-set -g @rose_pine_minimal_active_window_fg_light '#fffaf3'
-set -g @rose_pine_minimal_mode_bg_light '#286983'
-set -g @rose_pine_minimal_mode_fg_light '#fffaf3'
-```
-
-## How auto theme switching works
-
-When `@rose_pine_minimal_variant` is set to `auto`, the plugin installs two tmux hooks:
-
-- `client-dark-theme`
-- `client-light-theme`
-
-Each hook updates an internal option and reruns the theme application script. This follows the same general pattern Catppuccin documents for tmux native theme switching.
-
-If your tmux version or terminal does not report theme changes, set the variant to `dark` or `light` explicitly.
-
-## Notes
-
-- Auto switching requires tmux support for the theme-reporting hooks.
-- The plugin defaults to `dark` until a light/dark hook fires.
-- The mode indicator token defaults to `#{mode_indicator}`. If your mode indicator plugin uses another format variable, override `@rose_pine_minimal_mode_indicator_format`.
